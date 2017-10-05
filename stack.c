@@ -74,25 +74,65 @@ Stack * stack_push(Stack *s, const void *item){
 
 }
 /**------------------------------------------------------------------
-Extrae un elemento en la pila. Entrada: la pila de donde extraerlo. Salida: NULL si no logra extraerlo o el elemento extraido si lo logra. N�tese que la pila quedar� modificada
+Extrae un elemento en la pila.
+Entrada: la pila de donde extraerlo.
+Salida: NULL si no logra extraerlo o el elemento extraido si lo logra.
+
+N�tese que la pila quedar� modificada
 ------------------------------------------------------------------*/
-void * stack_pop(Stack *);
+void * stack_pop(Stack *s);
+
 /**------------------------------------------------------------------
-Copia un elemento (reservando memoria) sin modificar el top de la pila. Entrada: la pila de donde copiarlo. Salida: NULL si no logra copiarlo o el elemento si lo logra
+Copia un elemento (reservando memoria) sin modificar el top de la pila.
+Entrada: la pila de donde copiarlo.
+Salida: NULL si no logra copiarlo o el elemento si lo logra
 ------------------------------------------------------------------*/
-void * stack_top(const Stack *);
+void * stack_top(const Stack *s){
+  void * item=NULL;
+
+  if(!s)
+    return NULL;
+
+  item = malloc(sizeof(s->items[0]));
+  if(!item)
+    return NULL;
+
+  item = s->items[s->top];
+  return item;
+
+
+}
 /**------------------------------------------------------------------
-Comprueba si la pila esta vacia. Entrada: pila. Salida: TRUE si est� vacia o FALSE si no lo esta
+Comprueba si la pila esta vacia. Entrada: pila.
+Salida: TRUE si esta vacia o FALSE si no lo esta
 ------------------------------------------------------------------*/
-Bool stack_isEmpty(const Stack *);
+Bool stack_isEmpty(const Stack *s){
+  if(!s)
+    return FALSE;
+
+  if(s->top > -1)
+    return FALSE;
+  return TRUE;
+
+}
 /**------------------------------------------------------------------
-Comprueba si la pila esta llena. Entrada: pila. Salida: TRUE si est� llena o FALSE si no lo esta
+Comprueba si la pila esta llena.
+Entrada: pila.
+Salida: TRUE si esta llena o FALSE si no lo esta
 ------------------------------------------------------------------*/
-Bool stack_isFull(const Stack *);
+Bool stack_isFull(const Stack * s){
+  if (!s)
+    return FALSE;
+  return s->top == MAXSTACK-1;
+}
 /**------------------------------------------------------------------
 Imprime toda la pila, colocando el elemento en la cima al principio de la impresi�n (y un elemento por l�nea). Entrada: pila y fichero donde imprimirla. Salida: Devuelve el n�mero de caracteres escritos.
 ------------------------------------------------------------------*/
-int stack_print(FILE*, const Stack*);
+int stack_print(FILE*, const Stack*){
+
+}
 
 
-int stack_size(const Stack* );
+int stack_size(const Stack* s){
+  return s->top;
+}
