@@ -82,7 +82,7 @@ Stack * stack_push(Stack *s, const void *item){
 Extrae un elemento en la pila.
 Entrada: la pila de donde extraerlo.
 Salida: NULL si no logra extraerlo o el elemento extraido si lo logra.
-N�tese que la pila quedar� modificada
+Notese que la pila quedara modificada
 ------------------------------------------------------------------*/
 void * stack_pop(Stack *s){
   void *item;
@@ -106,23 +106,57 @@ Copia un elemento (reservando memoria) sin modificar el top de la pila.
 Entrada: la pila de donde copiarlo.
 Salida: NULL si no logra copiarlo o el elemento si lo logra
 ------------------------------------------------------------------*/
-void * stack_top(const Stack *);
+void * stack_top(const Stack *s){
+  if(!s)
+    return NULL;
+
+  return s->copy_element_function(s->items[s->top]);
+}
+
 /**------------------------------------------------------------------
-Comprueba si la pila esta vacia. Entrada: pila. Salida: TRUE si est� vacia o FALSE si no lo esta
+Comprueba si la pila esta vacia. Entrada: pila.
+Salida: TRUE si esta vacia o FALSE si no lo esta
 ------------------------------------------------------------------*/
-Bool stack_isEmpty(const Stack *);
+Bool stack_isEmpty(const Stack *s){
+  if(!s)
+    return FALSE;
+
+  if(s->top > -1)
+    return FALSE;
+  return TRUE;
+
+}
 /**------------------------------------------------------------------
 Comprueba si la pila esta llena.
 Entrada: pila.
-Salida: TRUE si est� llena o FALSE si no lo esta
+Salida: TRUE si esta llena o FALSE si no lo esta
 ------------------------------------------------------------------*/
-Bool stack_isFull(const Stack *);
+Bool stack_isFull(const Stack * s){
+  if (!s)
+    return FALSE;
+  return s->top == MAXSTACK-1;
+}
 /**------------------------------------------------------------------
 Imprime toda la pila, colocando el elemento en la cima al principio de
-la impresi�n (y un elemento por l�nea). Entrada: pila y fichero donde imprimirla.
-Salida: Devuelve el n�mero de caracteres escritos.
+la impresion (y un elemento por linea).
+Entrada: pila y fichero donde imprimirla.
+Salida: Devuelve el numero de caracteres escritos.
 ------------------------------------------------------------------*/
-int stack_print(FILE*, const Stack*);
+int stack_print(FILE* fp, const Stack* s){
+  int i, nchar = 0;
+
+  if(!fp || !s)
+    return -1;
+
+  for(i = 0; i <= s->top; i++){
+    nchar += s->print_element_function(fp, s->items[i]);
+  }
+
+  return nchar;
+
+}
 
 
-int stack_size(const Stack* );
+int stack_size(const Stack* s){
+  return s->top+1;
+}
