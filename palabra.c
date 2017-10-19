@@ -9,9 +9,8 @@ Palabra * palabraNueva();
 /* Crea una palabra nueva */
 void palabraElimina(Palabra * p_p);
 /* Libera la memoria asociada con la palabra */
-void palabraImprime(FILE * fd, Palabra * p_p){
-  fprintf(fd, "%s\n",p_p);
-}
+void palabraImprime(FILE * fd, Palabra * p_p);
+
 Palabra * palabraInsertaLetra(Palabra * p_p, char * letra){
 /* Inserta una letra (que es un string - char * - ) en la palabra proporcionada
 como argumento (modificándola, por tanto) y devuelve la palabra resultante. Para
