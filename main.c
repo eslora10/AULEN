@@ -29,8 +29,6 @@ int main(int argc, char** argv)
 
 
 
-
-
     
     stack_push(p_s_string1, "hola 1");
     stack_push(p_s_string1, "hola 2");
@@ -39,7 +37,6 @@ int main(int argc, char** argv)
     stack_push(p_s_string1, "hola 5");
     stack_push(p_s_string1, "hola 6");
     stack_push(p_s_string1, "hola 7");
-
 
     while(!stack_isEmpty(p_s_string1))
     {              

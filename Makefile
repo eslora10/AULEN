@@ -11,7 +11,7 @@ CFLAGS = -g -Wall -ansi -pedantic
 
 # $ make
 # $ make all
-all: p1s1
+all: p1s2
 # $ make p1
 P1 = p1s1 p1s2
 p1: $(P1)
@@ -26,13 +26,13 @@ main.o: main.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
 src1.o: stack.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
-src2.o: src2.c header2.h
+src2.o: estado.c estado.h
 	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s1
 p1s1: main.o src1.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 # $ make p1s2
-p1s2: main.o src2.o
+p1s2: src2.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 ########################################################################
 # P2
