@@ -1,17 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "palabra.h"
+#ifndef PALABRA_H
+#define PALABRA_H
 
-struct _Palabra {
-    int tam;
-    char **word;
-};
+typedef struct _Palabra Palabra;
 
 Palabra * palabraNueva();
 /* Crea una palabra nueva */
+
 void palabraElimina(Palabra * p_p);
 /* Libera la memoria asociada con la palabra */
+
 void palabraImprime(FILE * fd, Palabra * p_p);
 
 Palabra * palabraInsertaLetra(Palabra * p_p, char * letra);
@@ -30,3 +27,7 @@ int palabraCompara(Palabra * p_p1, Palabra * p_p2);
 función de que todas las letras de la misma posición y de izquierda a derecha
 sean iguales. En el caso de que no lo sean, se devuelve el strcmp de la primera
 pareja de letras que no sean iguales */
+
+
+#endif /* PALABRA_H */
+

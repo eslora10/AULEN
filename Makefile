@@ -24,15 +24,17 @@ p2: $(P2)
 ########################################################################
 main.o: main.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
-src1.o: stack.c stack.h basic_types.h
+stack.o: stack.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
-src2.o: estado.c estado.h
+estado.o: estado.c estado.h
+	$(CC) $(CFLAGS) -c $< -o $@
+palabra.o: palabra.c palabra.h
 	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s1
-p1s1: main.o src1.o
+p1s1: main.o stack.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 # $ make p1s2
-p1s2: src2.o
+p1s2: estado.o palabra.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 ########################################################################
 # P2
