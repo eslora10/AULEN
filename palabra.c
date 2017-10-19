@@ -10,7 +10,16 @@ struct _Palabra {
     char **word;
 };
 
-Palabra * palabraNueva();
+Palabra * palabraNueva() {
+    Palabra *p = NULL;
+
+    p = (Palabra*) malloc(sizeof (Palabra));
+
+    p->tam = 0;
+    /*p->lon=0;*/
+    p->word = NULL;
+    return p;
+}
 
 /* Crea una palabra nueva */
 void palabraElimina(Palabra * p_p) {
@@ -25,8 +34,14 @@ void palabraElimina(Palabra * p_p) {
 
     free(p_p);
 }
+
 /* Libera la memoria asociada con la palabra */
-void palabraImprime(FILE * fd, Palabra * p_p);
+void palabraImprime(FILE * fd, Palabra * p_p) {
+    int i;
+
+    for (i = 0; i < p_p->tam; i++)
+        fprintf(fd, "%s\n", p_p->word[i]);
+}
 
 Palabra * palabraInsertaLetra(Palabra * p_p, char * letra) {
     int len;
@@ -46,18 +61,47 @@ Palabra * palabraInsertaLetra(Palabra * p_p, char * letra) {
 
     return p_p;
 }
+
 /* Inserta una letra (que es un string - char * - ) en la palabra proporcionada
 como argumento (modificándola, por tanto) y devuelve la palabra resultante. Para
 ello debe hacer una copia en memoria nueva para la nueva letra */
 
-int palabraTamano(Palabra * p_p);
-/* Devuelve la longitud de la palabra */
+int palabraTamano(Palabra * p_p) {
+    return p_p->tam;
+}
 
-Palabra * palabraCopia(Palabra * p_p);
-/* Hace en memoria nueva una copia de la palabra y la devuelve */
+Palabra * palabraCopia(Palabra * p_p) {
+    Palabra *p = NULL;
+    int i;
 
-int palabraCompara(Palabra * p_p1, Palabra * p_p2);
-/* Para comparar dos palabras, devuelve un valor negativo, cero o positivo en
-función de que todas las letras de la misma posición y de izquierda a derecha
-sean iguales. En el caso de que no lo sean, se devuelve el strcmp de la primera
-pareja de letras que no sean iguales */
+    if (!p_p) return NULL;
+
+    p = (Palabra*) malloc(sizeof (Palabra));
+
+    for (i = 0; i < p_p->tam; i++) {
+        palabraInsertaLetra(p, p_p->word[i]);
+    }
+    p->tam = p_p->tam;
+    /*p->lon=p_p->lon;*/
+
+    return p;
+}
+
+int palabraCompara(Palabra * p_p1, Palabra * p_p2) {
+    int v, i;
+
+    if (!p_p1 || !p_p2) return -1;
+
+    v = p_p1->tam - p_p2->tam;
+
+    if (!v)
+        return -1;
+
+    for (i = 0; i < p_p1->tam; i++) {
+        v = strcmp(p_p1->word[i], p_p2->word[i]);
+        if (!v)
+            return v;
+    }
+    return 0;
+
+}
