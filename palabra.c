@@ -1,7 +1,8 @@
 
 
 typedef struct _Palabra{
-
+    int tam;
+    char** word;
 } Palabra;
 
 Palabra * palabraNueva();
