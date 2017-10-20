@@ -21,8 +21,10 @@ p2: $(P2)
 
 ########################################################################
 # P1
-########################################################################
-main.o: main.c stack.h basic_types.h
+#########################################################################
+raro.o: raro.c stack.h basic_types.h
+	$(CC) $(CFLAGS) -c $< -o $@
+main.o: main.c palabra.h estado.h
 	$(CC) $(CFLAGS) -c $< -o $@
 stack.o: stack.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -31,10 +33,10 @@ estado.o: estado.c estado.h
 palabra.o: palabra.c palabra.h
 	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s1
-p1s1: main.o stack.o
+p1s1: raro.o stack.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 # $ make p1s2
-p1s2: estado.o palabra.o
+p1s2: main.o estado.o palabra.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 ########################################################################
 # P2

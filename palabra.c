@@ -14,10 +14,10 @@ Palabra * palabraNueva() {
     Palabra *p = NULL;
 
     p = (Palabra*) malloc(sizeof (Palabra));
-
-    p->tam = 0;
-    /*p->lon=0;*/
+    
     p->word = NULL;
+    p->tam = 0;
+    p->lon = 0;
     return p;
 }
 
@@ -27,8 +27,8 @@ void palabraElimina(Palabra * p_p) {
 
     if (!p_p) return;
 
-    for (i = 0; i < p_p->tam; i++)
-        free(p_p->word + i);
+    for (i = 0; i < p_p->lon; i++)
+        free(p_p->word[i]);
 
     free(p_p->word);
 
@@ -39,24 +39,25 @@ void palabraElimina(Palabra * p_p) {
 void palabraImprime(FILE * fd, Palabra * p_p) {
     int i;
 
-    for (i = 0; i < p_p->tam; i++)
-        fprintf(fd, "%s\n", p_p->word[i]);
+    for (i = 0; i < p_p->lon; i++)
+        fprintf(fd, "%s", p_p->word[i]);
 }
 
 Palabra * palabraInsertaLetra(Palabra * p_p, char * letra) {
     int len;
 
-    if (!p_p || !p_p->word || !letra) return NULL;
+    if (!p_p || !letra) return NULL;
 
     len = strlen(letra);
 
-    p_p->word = realloc(p_p->word, p_p->lon);
-
-    p_p->word[p_p->lon] = (char*) malloc((len + 1) * sizeof (char));
-
-    strcpy(p_p->word[p_p->lon], letra);
-
     p_p->lon++;
+
+    p_p->word = realloc(p_p->word, p_p->lon * sizeof(char*));
+
+    p_p->word[p_p->lon - 1] = (char*) malloc((len + 1) * sizeof (char));
+
+    strcpy(p_p->word[p_p->lon - 1], letra);
+
     p_p->tam += len;
 
     return p_p;
@@ -76,13 +77,11 @@ Palabra * palabraCopia(Palabra * p_p) {
 
     if (!p_p) return NULL;
 
-    p = (Palabra*) malloc(sizeof (Palabra));
+    p = palabraNueva();
 
-    for (i = 0; i < p_p->tam; i++) {
+    for (i = 0; i < p_p->lon; i++) {
         palabraInsertaLetra(p, p_p->word[i]);
     }
-    p->tam = p_p->tam;
-    /*p->lon=p_p->lon;*/
 
     return p;
 }
@@ -94,7 +93,7 @@ int palabraCompara(Palabra * p_p1, Palabra * p_p2) {
 
     v = p_p1->tam - p_p2->tam;
 
-    if (!v)
+    if (v)
         return -1;
 
     for (i = 0; i < p_p1->tam; i++) {
