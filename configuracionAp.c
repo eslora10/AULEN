@@ -8,7 +8,20 @@ struct _ConfiguracionAp {
 };
 
 ConfiguracionAp * configuracionApNueva(Estado * estado, Stack * pila, Palabra *
-        cadena);
+        cadena) {
+    ConfiguracionAp *c = NULL;
+
+    c = (ConfiguracionAp*) malloc(sizeof (ConfiguracionAp));
+
+    if (!c)
+        return NULL;
+
+    /*c->estado=estado;
+    c->pila=pila;
+    c->cadena=stack_copy(cadena;*/
+
+    return c;
+}
 
 void configuracionApElimina(ConfiguracionAp * p_cap) {
     if (!p_cap) return;
@@ -21,10 +34,19 @@ void configuracionApElimina(ConfiguracionAp * p_cap) {
 
     if (p_cap->cadena)
         palabraElimina(p_cap->cadena);
-    
+
     free(p_cap);
 }
-void configuracionApImprime(FILE * fd, ConfiguracionAp * p_cap);
+
+void configuracionApImprime(FILE * fd, ConfiguracionAp * p_cap) {
+
+    fprintf(fd, "( ");
+    estadoImprime(fd, p_cap->estado);
+    stack_print(fd, p_cap->pila);
+    palabraImprime(fd, p_cap->cadena);
+    fprintf(fd, " )\n");
+
+}
 
 ConfiguracionAp * configuracionApCopia(ConfiguracionAp * p_cap) {
     ConfiguracionAp *newp_cap = NULL;
@@ -42,24 +64,25 @@ ConfiguracionAp * configuracionApCopia(ConfiguracionAp * p_cap) {
 
     return newp_cap;
 }
-int configuracionCompara(ConfiguracionAp * p_cap1, ConfiguracionAp * p_cap2){
+
+int configuracionCompara(ConfiguracionAp * p_cap1, ConfiguracionAp * p_cap2) {
     int ret;
-    
-    if(!p_cap1 || !p_cap2) return -1;
-    
+
+    if (!p_cap1 || !p_cap2) return -1;
+
     /*Comparar estados*/
-    ret = estadoCompara(p_cap1->estado,p_cap2->estado);
-    
-    if(ret) return ret;
-    
+    ret = estadoCompara(p_cap1->estado, p_cap2->estado);
+
+    if (ret) return ret;
+
     /*Comparar pilas*/
     ret = stack_compare(p_cap1->pila, p_cap2->pila);
-    
-    if(ret) return ret;
-    
+
+    if (ret) return ret;
+
     /*Comparar cadenas*/
     ret = palabraCompara(p_cap1->cadena, p_cap2->cadena);
-    
-    return ret;    
-    
+
+    return ret;
+
 }

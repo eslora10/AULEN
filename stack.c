@@ -6,9 +6,11 @@ struct _Stack {
     destroy_element_function_type destroy_element_function;
     copy_element_function_type copy_element_function;
     print_element_function_type print_element_function;
+    cmp_element_function_type cmp_element_function;
 };
 
-Stack * stack_ini(destroy_element_function_type f1, copy_element_function_type f2, print_element_function_type f3) {
+Stack * stack_ini(destroy_element_function_type f1, copy_element_function_type f2,
+        print_element_function_type f3, cmp_element_function_type f4) {
     Stack *s = NULL;
 
     s = (Stack*) malloc(sizeof (Stack));
@@ -21,6 +23,7 @@ Stack * stack_ini(destroy_element_function_type f1, copy_element_function_type f
     s->destroy_element_function = f1;
     s->copy_element_function = f2;
     s->print_element_function = f3;
+    s->cmp_element_function = f4;
 
     return s;
 }
@@ -114,21 +117,38 @@ int stack_size(const Stack* s) {
     return s->top + 1;
 }
 
-Stack * stack_copy(Stack * s){
+Stack * stack_copy(Stack * s) {
     Stack* new = NULL;
     int i;
-    
-    if(!s) return NULL;
-    
-    new = stack_ini(s->destroy_element_function, s->copy_element_function, 
-    s->print_element_function);
-    
-    if(!new) return NULL;
-    
-    for (i = 0; i <= s->top; i++){
+
+    if (!s) return NULL;
+
+    new = stack_ini(s->destroy_element_function, s->copy_element_function,
+            s->print_element_function, s->cmp_element_function);
+
+    if (!new) return NULL;
+
+    for (i = 0; i <= s->top; i++) {
         stack_push(new, s->items[i]);
     }
-    
-    
+
+
     return new;
+}
+
+int stack_compare(const Stack *s1, const Stack *s2) {
+
+    int i, ret;
+    /*iterar hasta <=*/
+
+    ret = s1->top - s2->top;
+    if (ret)
+        return ret;
+
+    for (i = 0; i <= s1->top; i++) {
+        ret = s1->cmp_element_function(s1->items[i], s2->items[i]);
+        if (ret)
+            return ret; /*devolvemos el error del elemento*/
+    }
+    return 0;
 }

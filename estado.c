@@ -23,6 +23,17 @@ Estado * estadoNuevo(char * nombre, int tipo) {
 
     return estado;
 }
+
+void estadoElimina( Estado * p_s){
+
+    if(p_s){
+      if(p_s->nombre);
+        free(p_s->nombre);
+      free(p_s);
+      }
+
+}
+
 /* Reserva memoria nueva para el estado y para la cadena de su nombre, crea un
 estado con las dos componentes que se le proporcionan como argumento */
 

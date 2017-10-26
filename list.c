@@ -1,4 +1,4 @@
-#include "generic_collections_types.h"
+#include "generic_collection_types.h"
 #include "dynamic_node.h"
 #include "list.h"
 #include <stdio.h>

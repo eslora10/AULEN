@@ -12,7 +12,7 @@ Palabra * palabraNueva() {
     Palabra *p = NULL;
 
     p = (Palabra*) malloc(sizeof (Palabra));
-    
+
     p->word = NULL;
     p->lon = 0;
     return p;
@@ -90,7 +90,7 @@ int palabraCompara(Palabra * p_p1, Palabra * p_p2) {
     v = p_p1->lon - p_p2->lon;
 
     if (v)
-        return -1;
+        return v;
 
     for (i = 0; i < p_p1->lon; i++) {
         v = strcmp(p_p1->word[i], p_p2->word[i]);

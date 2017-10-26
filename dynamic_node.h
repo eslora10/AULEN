@@ -2,7 +2,7 @@
 #define DYNAMIC_NODE_H
 
 #include <stdio.h>
-#include "generic_collections_types.h"
+#include "generic_collection_types.h"
 
 
 typedef struct _DynamicNode DynamicNode;
