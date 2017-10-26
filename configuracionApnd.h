@@ -1,3 +1,6 @@
+#ifndef CONFIGURACIONAPND_H
+#define CONFIGURACIONAPND_H
+
 ConfiguracionApnd * configuracionApndIni( );
 /* Inicializa una configuración no determinista */
 ConfiguracionApnd* configuracionApndInsert(ConfiguracionApnd* capnd, const
@@ -19,3 +22,5 @@ int configuracionApndPrint(FILE *fd, const ConfiguracionApnd* capnd);
 orden */
 void configuracionApndDestroy( ConfiguracionApnd* capnd);
 /* Se libera toda la memoria asociada con la configuracion no determinista */
+
+#endif
