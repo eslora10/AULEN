@@ -8,12 +8,33 @@ struct _ConfiguracionAp {
 };
 
 ConfiguracionAp * configuracionApNueva(Estado * estado, Stack * pila, Palabra *
-        cadena);
+        cadena){
+    ConfiguracionAp *c=NULL;
+
+    c = (ConfiguracionAp*) malloc(sizeof (ConfiguracionAp));
+
+    if (!c)
+        return NULL;
+
+    /*c->estado=estado;
+    c->pila=pila;
+    c->cadena=stack_copy(cadena;*/
+
+    return c;
+        }
 /* Se crea una configuración reservando memoria nueva para ella y para copiar
 todas las componentes que se proporcionan como argumento */
 void configuracionApElimina(ConfiguracionAp * p_cap);
 /* Se libera toda la memoria asociada con la configuracion */
-void configuracionApImprime(FILE * fd, ConfiguracionAp * p_cap);
+void configuracionApImprime(FILE * fd, ConfiguracionAp * p_cap){
+
+  fprintf(fd, "( ");
+  estadoImprime(fd,p_cap->estado);
+  stack_print(fd, p_cap->pila);
+  palabraImprime(fd,p_cap->cadena);
+  fprintf(fd, " )\n");
+
+}
 /* Se muestra por pantalla la configuración */
 ConfiguracionAp * configuracionApCopia(ConfiguracionAp * p_cap);
 /* Se devuelve una copia en memoria nueva de la configuración */
