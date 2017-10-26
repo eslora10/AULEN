@@ -4,8 +4,6 @@
 #include "palabra.h"
 
 struct _Palabra {
-    int tam; /*Tamano de la palabra entendido como la suma de la longitud
-              * de las cadenas que contiene*/
     int lon; /*Tamano del array*/
     char **word;
 };
@@ -16,7 +14,6 @@ Palabra * palabraNueva() {
     p = (Palabra*) malloc(sizeof (Palabra));
     
     p->word = NULL;
-    p->tam = 0;
     p->lon = 0;
     return p;
 }
@@ -58,7 +55,6 @@ Palabra * palabraInsertaLetra(Palabra * p_p, char * letra) {
 
     strcpy(p_p->word[p_p->lon - 1], letra);
 
-    p_p->tam += len;
 
     return p_p;
 }
@@ -68,7 +64,7 @@ como argumento (modificándola, por tanto) y devuelve la palabra resultante. Par
 ello debe hacer una copia en memoria nueva para la nueva letra */
 
 int palabraTamano(Palabra * p_p) {
-    return p_p->tam;
+    return p_p->lon;
 }
 
 Palabra * palabraCopia(Palabra * p_p) {
@@ -91,12 +87,12 @@ int palabraCompara(Palabra * p_p1, Palabra * p_p2) {
 
     if (!p_p1 || !p_p2) return -1;
 
-    v = p_p1->tam - p_p2->tam;
+    v = p_p1->lon - p_p2->lon;
 
     if (v)
         return -1;
 
-    for (i = 0; i < p_p1->tam; i++) {
+    for (i = 0; i < p_p1->lon; i++) {
         v = strcmp(p_p1->word[i], p_p2->word[i]);
         if (!v)
             return v;
