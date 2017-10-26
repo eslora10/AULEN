@@ -113,3 +113,22 @@ int stack_print(FILE* fp, const Stack* s) {
 int stack_size(const Stack* s) {
     return s->top + 1;
 }
+
+Stack * stack_copy(Stack * s){
+    Stack* new = NULL;
+    int i;
+    
+    if(!s) return NULL;
+    
+    new = stack_ini(s->destroy_element_function, s->copy_element_function, 
+    s->print_element_function);
+    
+    if(!new) return NULL;
+    
+    for (i = 0; i <= s->top; i++){
+        stack_push(new, s->items[i]);
+    }
+    
+    
+    return new;
+}

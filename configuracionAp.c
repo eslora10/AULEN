@@ -9,16 +9,57 @@ struct _ConfiguracionAp {
 
 ConfiguracionAp * configuracionApNueva(Estado * estado, Stack * pila, Palabra *
         cadena);
-/* Se crea una configuración reservando memoria nueva para ella y para copiar
-todas las componentes que se proporcionan como argumento */
-void configuracionApElimina(ConfiguracionAp * p_cap);
-/* Se libera toda la memoria asociada con la configuracion */
+
+void configuracionApElimina(ConfiguracionAp * p_cap) {
+    if (!p_cap) return;
+
+    if (p_cap->estado)
+        estadoElimina(p_cap->estado);
+
+    if (p_cap->pila)
+        stack_destroy(p_cap->pila);
+
+    if (p_cap->cadena)
+        palabraElimina(p_cap->cadena);
+    
+    free(p_cap);
+}
 void configuracionApImprime(FILE * fd, ConfiguracionAp * p_cap);
-/* Se muestra por pantalla la configuración */
-ConfiguracionAp * configuracionApCopia(ConfiguracionAp * p_cap);
-/* Se devuelve una copia en memoria nueva de la configuración */
-int configuracionCompara(ConfiguracionAp * p_cap1, ConfiguracionAp * p_cap2);
-/* Se utiliza para comparar dos configuraciones deterministas, devolviendo un
-valor negativo, 0 o positivo en función de la comparación de sus componentes en
-este orden: estados, pilas, cadenas. En el caso de que no sean iguales, devuelve
-el valor que devuelva la comparación de la primera que sea distinta*/
+
+ConfiguracionAp * configuracionApCopia(ConfiguracionAp * p_cap) {
+    ConfiguracionAp *newp_cap = NULL;
+
+    if (!p_cap) return NULL;
+
+    newp_cap = configuracionApNueva(p_cap->estado, p_cap->pila, p_cap->cadena);
+    if (!newp_cap) return NULL;
+
+    /*
+    newp_cap->estado = estado_copy(p_cap->estado);
+    newp_cap->cadena = palabraCopia(p_cap->cadena);
+    newp_cap->pila = stack_copy(p_cap);
+     */
+
+    return newp_cap;
+}
+int configuracionCompara(ConfiguracionAp * p_cap1, ConfiguracionAp * p_cap2){
+    int ret;
+    
+    if(!p_cap1 || !p_cap2) return -1;
+    
+    /*Comparar estados*/
+    ret = estadoCompara(p_cap1->estado,p_cap2->estado);
+    
+    if(ret) return ret;
+    
+    /*Comparar pilas*/
+    ret = stack_compare(p_cap1->pila, p_cap2->pila);
+    
+    if(ret) return ret;
+    
+    /*Comparar cadenas*/
+    ret = palabraCompara(p_cap1->cadena, p_cap2->cadena);
+    
+    return ret;    
+    
+}

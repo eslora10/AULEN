@@ -4,13 +4,10 @@
 #include "basic_types.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "generic_collections_types.h"
 
 #define MAXSTACK 2024
 typedef struct _Stack Stack;
-
-typedef void (*destroy_element_function_type)(void*);
-typedef void (*(*copy_element_function_type)(const void*));
-typedef int (*print_element_function_type)(FILE *, const void*);
 
 Stack * stack_ini(destroy_element_function_type f1, copy_element_function_type f2, print_element_function_type f3);
 
@@ -29,6 +26,10 @@ Bool stack_isFull(const Stack *);
 int stack_print(FILE*, const Stack*);
 
 int stack_size(const Stack* );
+
+int stack_compare(const Stack* , const Stack*);
+
+Stack * stack_copy(Stack *);
 
 
 #endif
