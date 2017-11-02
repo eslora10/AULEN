@@ -24,8 +24,8 @@ int main(int argc, char** argv)
     Stack * p_s_string1, * p_s_string2;
     char * aux_string;
 
-    p_s_string1 = (Stack *) stack_ini(    destroy_p_string, copy_p_string, print_p_string );
-    p_s_string2 = (Stack *) stack_ini(    destroy_p_string, copy_p_string, print_p_string );
+    p_s_string1 = (Stack *) stack_ini(    destroy_p_string, copy_p_string, print_p_string, (cmp_element_function_type) strcmp);
+    p_s_string2 = (Stack *) stack_ini(    destroy_p_string, copy_p_string, print_p_string, (cmp_element_function_type) strcmp);
 
 
 

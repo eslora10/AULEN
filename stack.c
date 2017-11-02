@@ -48,7 +48,7 @@ Stack * stack_push(Stack *s, const void *item) {
         return NULL;
 
     s->top++;
-    s->items = realloc(s->items, (s->top + 1) * sizeof (s->items[0]));
+    s->items = realloc(s->items, (s->top + 1) * sizeof (void*));
 
     if (!s->items)
         return NULL;
@@ -66,7 +66,7 @@ void * stack_pop(Stack *s) {
 
     item = s->items[s->top];
 
-    if (s->top != 0) s->items = realloc(s->items, (s->top) * sizeof (s->items[0]));
+    if (s->top != 0) s->items = realloc(s->items, (s->top) * sizeof (void*));
 
     if (!s->items)
         return NULL;

@@ -11,7 +11,7 @@ CFLAGS = -g -Wall -ansi -pedantic
 
 # $ make
 # $ make all
-all: p1s2
+all: p1s2 p1s1
 # $ make p1
 P1 = p1s1 p1s2
 p1: $(P1)
@@ -22,9 +22,9 @@ p2: $(P2)
 ########################################################################
 # P1
 #########################################################################
-raro.o: raro.c stack.h basic_types.h
+p1s1.o: p1s1.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
-main.o: main.c palabra.h estado.h
+p1s2.o: p1s2.c palabra.h estado.h
 	$(CC) $(CFLAGS) -c $< -o $@
 stack.o: stack.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -41,10 +41,10 @@ list.o: list.c list.h dynamic_node.h
 configuracion_apnd.o: configuracion_apnd.c configuracion_ap.h list.h
 	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s1
-p1s1: raro.o stack.o
+p1s1: p1s1.o stack.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 # $ make p1s2
-p1s2: main.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
+p1s2: p1s2.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 ########################################################################
 # P2
