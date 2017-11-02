@@ -1,4 +1,4 @@
-#include "configuracionAp.h"
+#include "configuracion_ap.h"
 
 struct _ConfiguracionAp {
     Estado *estado;
@@ -16,9 +16,9 @@ ConfiguracionAp * configuracionApNueva(Estado * estado, Stack * pila, Palabra *
     if (!c)
         return NULL;
 
-    /*c->estado=estado;
-    c->pila=pila;
-    c->cadena=stack_copy(cadena;*/
+    c->estado = estado_copy(estado);
+    c->cadena = palabraCopia(cadena);
+    c->pila = stack_copy(pila);
 
     return c;
 }
@@ -40,11 +40,11 @@ void configuracionApElimina(ConfiguracionAp * p_cap) {
 
 void configuracionApImprime(FILE * fd, ConfiguracionAp * p_cap) {
 
-    fprintf(fd, "( ");
+    fprintf(fd, "(");
     estadoImprime(fd, p_cap->estado);
     stack_print(fd, p_cap->pila);
     palabraImprime(fd, p_cap->cadena);
-    fprintf(fd, " )\n");
+    fprintf(fd, ")\n");
 
 }
 

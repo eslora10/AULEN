@@ -1,7 +1,7 @@
 #ifndef CONFIGURACIONAPND_H
 #define CONFIGURACIONAPND_H
 
-#include "configuracionAp.h"
+#include "configuracion_ap.h"
 
 typedef struct _ConfiguracionApnd ConfiguracionApnd;
 

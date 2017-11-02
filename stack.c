@@ -104,11 +104,12 @@ int stack_print(FILE* fp, const Stack* s) {
 
     if (!fp || !s)
         return -1;
-
+    
+    nchar += fprintf(fp, "<");
     for (i = s->top; i >= 0; i--) {
         nchar += s->print_element_function(fp, s->items[i]);
     }
-
+    nchar += fprintf(fp, "> ");
     return nchar;
 
 }

@@ -1,4 +1,4 @@
-#include "configuracionApnd.h"
+#include "configuracion_apnd.h"
 #include "list.h"
 
 struct _ConfiguracionApnd{
@@ -69,6 +69,9 @@ orden */
 void configuracionApndDestroy( ConfiguracionApnd* capnd){
     if(!capnd) return;
     
-    list_destroy(capnd->set);
+    if(capnd->set)
+        list_destroy(capnd->set);
+    
+    free(capnd);
 }
 /* Se libera toda la memoria asociada con la configuracion no determinista */

@@ -33,11 +33,15 @@ void palabraElimina(Palabra * p_p) {
 }
 
 /* Libera la memoria asociada con la palabra */
-void palabraImprime(FILE * fd, Palabra * p_p) {
+void palabraImprime(FILE * fd, Palabra * p_p) {    
     int i;
-
+    
+    if(!fd || ! p_p) return;
+    
+    fprintf(fd, "[(%d)", p_p->lon);
     for (i = 0; i < p_p->lon; i++)
-        fprintf(fd, "%s", p_p->word[i]);
+        fprintf(fd, "%s ", p_p->word[i]);
+    fprintf(fd, "]");
 }
 
 Palabra * palabraInsertaLetra(Palabra * p_p, char * letra) {

@@ -32,19 +32,19 @@ estado.o: estado.c estado.h
 	$(CC) $(CFLAGS) -c $< -o $@
 palabra.o: palabra.c palabra.h
 	$(CC) $(CFLAGS) -c $< -o $@
-configuracionAp.o: configuracionAp.c configuracionAp.h estado.h stack.h palabra.h
+configuracion_ap.o: configuracion_ap.c configuracion_ap.h estado.h stack.h palabra.h
 	$(CC) $(CFLAGS) -c $< -o $@
 dynamic_node.o: dynamic_node.c dynamic_node.h
 	$(CC) $(CFLAGS) -c $< -o $@
 list.o: list.c list.h dynamic_node.h
 	$(CC) $(CFLAGS) -c $< -o $@
-configuracionApnd.o: configuracionApnd.c configuracionAp.h list.h
+configuracion_apnd.o: configuracion_apnd.c configuracion_ap.h list.h
 	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s1
 p1s1: raro.o stack.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 # $ make p1s2
-p1s2: main.o estado.o palabra.o configuracionAp.o stack.o configuracionApnd.o list.o dynamic_node.o
+p1s2: main.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 ########################################################################
 # P2

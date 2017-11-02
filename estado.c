@@ -43,16 +43,16 @@ void estadoImprime(FILE * fd, Estado * p_s) {
     switch (p_s->tipo) {
 
         case INICIAL:
-            fprintf(fd, "->%s", p_s->nombre);
+            fprintf(fd, "->%s ", p_s->nombre);
             break;
         case FINAL:
-            fprintf(fd, "%s*", p_s->nombre);
+            fprintf(fd, "%s* ", p_s->nombre);
             break;
         case INICIAL_Y_FINAL:
-            fprintf(fd, "->%s*\n", p_s->nombre);
+            fprintf(fd, "->%s* ", p_s->nombre);
             break;
         default:
-            fprintf(fd, "%s\n", p_s->nombre);
+            fprintf(fd, "%s ", p_s->nombre);
             break;
     }
 }
