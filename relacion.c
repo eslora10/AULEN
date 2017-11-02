@@ -3,32 +3,67 @@
 struct _Relacion {
     char *nombre;
     int num_elementos;
-    int **elem;
+    int **origen;
+    int **cierre;
 };
 
-Relacion * relacionNueva(char * nombre, int num_elementos);
-/*
-Crea una nueva relación a la que se le da como nombre el proporcionado como argumento para un conjunto con el número de elementos que se prorpociona como argumento.
-Debe reservar memoria propia para todas las componentes que decidas utilizar en la relación.
- */
+Relacion * relacionNueva(char * nombre, int num_elementos){
+  Relacion *r = NULL;
+  int i=0;
+
+  r = (Relacion*) malloc(sizeof (Relacion));
+
+  r->nombre = nombre;
+  r->num_elementos = num_elementos;
+
+/*init elem*/
+  r->origen = (int**) malloc(num_elementos*sizeof (int*));
+  for (i=0;i<num_elementos;i++)
+    r->origen[i] = (int*) calloc(num_elementos,sizeof (int));
+
+/*init cierre*/
+  r->cierre = (int**) malloc(num_elementos*sizeof (int*));
+  for (i=0;i<num_elementos;i++)
+    r->cierre[i] = (int*) calloc(num_elementos,sizeof (int));
+
+  return r;
+
+
+}
+
 void relacionImprime(FILE * fd, Relacion * p_r);
 /*
 Muestra por el FILE * la relación. Puedes suponer el formato de salida utilizado en los ejemplos.
  */
-void relacionElimina(Relacion * p_r);
-/*
-Libera toda la memoria asociada con la relación.
- */
+void relacionElimina(Relacion * p_r){
+
+  int i=0;
+
+  if (!p_r) return;
+
+  for (i = p_r->num_elementos; i >0; i--){
+    free(p_r->origen[i]);
+    free(p_r->cierre[i]);
+  }
+
+  free(p_r->origen);
+  free(p_r->cierre);
+
+  if(p_r->nombre)
+    free(p_r->nombre);
+
+}
+
 Relacion * relacionCopia(Relacion * p_r1);
 /*
 Genera en memoria nueva una copia de la relación proporcionada como argumento y la devuelve.
  */
-Relacion * relacionInserta(Relacion * p_r, int i, int j);
-/*
-Modifica la relación proporcionada como argumento para que tenga constancia de que el elemento i está relacionado con el j. 
-Se está suponiendo que los elementos están dispuestos en un orden precondebido y conocido por el usuario de la librería. 
-Una vez modificada, la relación es también devuelta.
- */
+Relacion * relacionInserta(Relacion * p_r, int i, int j){
+  p_r->origen[i][j]=1;
+  p_r->cierre[i][j]=1;
+  return p_r;
+}
+
 
 int relacionTamano(Relacion * p_r);
 /*
@@ -44,8 +79,7 @@ int relacionIJ(Relacion * p_r, int i, int j);
 /*
 Devuelve 1 si el elemento i está relacionado originalmente con el j y 0 en caso contrario.
  */
-int relacionCierreIJ(Relacion * p_r, int i, int j);
-/*
-Devuelve 1 si el elemento i está relacionado (en el cierre transitivo) con el j y 0 en el caso contrario.
- */
-
+int relacionCierreIJ(Relacion * p_r, int i, int j){
+  /*indices positivos, principio RTFM*/
+  return p_r->cierre[i][j];
+}
