@@ -1,10 +1,10 @@
 #include "relacion.h"
+#include <string.h>
 
 struct _Relacion {
     char *nombre;
     int num_elementos;
     int **origen;
-    int **pow;
     int **cierre;
 };
 
@@ -14,7 +14,8 @@ Relacion * relacionNueva(char * nombre, int num_elementos) {
 
     r = (Relacion*) malloc(sizeof (Relacion));
 
-    r->nombre = nombre;
+    r->nombre = (char*) malloc((strlen(nombre) + 1) * sizeof (char));
+    strcpy(r->nombre, nombre);
     r->num_elementos = num_elementos;
 
     /*init elem*/
@@ -26,11 +27,6 @@ Relacion * relacionNueva(char * nombre, int num_elementos) {
     r->cierre = (int**) malloc(num_elementos * sizeof (int*));
     for (i = 0; i < num_elementos; i++)
         r->cierre[i] = (int*) calloc(num_elementos, sizeof (int));
-
-    /*initi potencia*/
-    r->pow = (int**) malloc(num_elementos * sizeof (int*));
-    for (i = 0; i < num_elementos; i++)
-        r->pow[i] = (int*) calloc(num_elementos, sizeof (int));
 
     return r;
 
@@ -51,7 +47,7 @@ void relacionImprime(FILE * fd, Relacion * p_r) {
     for (i = 0; i < p_r->num_elementos; i++) {
         fprintf(fd, "\t[%d]", i);
         for (j = 0; j < p_r->num_elementos; j++)
-            fprintf(fd, "/t%d", p_r->cierre[i][j]);
+            fprintf(fd, "\t%d", p_r->cierre[i][j]);
         fprintf(fd, "\n");
     }
 
@@ -59,7 +55,7 @@ void relacionImprime(FILE * fd, Relacion * p_r) {
     for (i = 0; i < p_r->num_elementos; i++) {
         fprintf(fd, "\t[%d]", i);
         for (j = 0; j < p_r->num_elementos; j++)
-            fprintf(fd, "/t%d", p_r->origen[i][j]);
+            fprintf(fd, "\t%d", p_r->origen[i][j]);
         fprintf(fd, "\n");
     }
     fprintf(fd, "}\n");
@@ -71,7 +67,7 @@ void relacionElimina(Relacion * p_r) {
 
     if (!p_r) return;
 
-    for (i = p_r->num_elementos; i > 0; i--) {
+    for (i = p_r->num_elementos - 1; i >= 0; i--) {
         free(p_r->origen[i]);
         free(p_r->cierre[i]);
     }
@@ -82,6 +78,8 @@ void relacionElimina(Relacion * p_r) {
     if (p_r->nombre)
         free(p_r->nombre);
 
+    free(p_r);
+
 }
 
 Relacion * relacionCopia(Relacion * p_r1) {
@@ -90,11 +88,11 @@ Relacion * relacionCopia(Relacion * p_r1) {
 
     if (!p_r1) return NULL;
 
-    p_r = relacionNueva(p_r->nombre, p_r->num_elementos);
+    p_r = relacionNueva(p_r1->nombre, p_r1->num_elementos);
 
     if (!p_r) return NULL;
 
-    for (i = 0; i < p_r->num_elementos; i++)
+    for (i = 0; i < p_r1->num_elementos; i++)
         for (j = 0; j < p_r->num_elementos; j++) {
             p_r->origen[i][j] = p_r1->origen[i][j];
             p_r->cierre[i][j] = p_r1->cierre[i][j];
@@ -106,7 +104,6 @@ Relacion * relacionCopia(Relacion * p_r1) {
 Relacion * relacionInserta(Relacion * p_r, int i, int j) {
     p_r->origen[i][j] = 1;
     p_r->cierre[i][j] = 1;
-    p_r->pow[i][j] = 1;
     return p_r;
 }
 
@@ -116,17 +113,14 @@ int relacionTamano(Relacion * p_r) {
 }
 
 Relacion * relacionCierreTransitivo(Relacion * p_r) {
-    int i, j, k, f;
+    int i, j, k;
 
-    for (i = 0; i < p_r->num_elementos; i++)
+    for (i = 0; i < p_r->num_elementos; i++) {
         for (j = 0; j < p_r->num_elementos; j++)
-            for (k = i; k < j; k++)
-                if (p_r->pow[i][k] == p_r->origen[k][j] && p_r->origen[k][j] == 1) {
-                    p_r->cierre[i][j] = 1;
-                    p_r->pow[i][j] = 1;
-                    f = 1;
-                }
-    /*faltaria comprobar el flag-> cuando es 0 paramos el bucle*/
+            for (k = 0; k < p_r->num_elementos; k++)
+                p_r->cierre[j][k] = (p_r->cierre[j][k] || (p_r->cierre[j][i] && p_r->cierre[i][k]));
+
+    }
     return p_r;
 }
 

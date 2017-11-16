@@ -13,7 +13,7 @@ CFLAGS = -g -Wall -ansi -pedantic
 # $ make all
 all: p1s2 p1s1 p1s3
 # $ make p1
-P1 = p1s1 p1s2
+P1 = p1s1 p1s2 p1s3
 p1: $(P1)
 # $ make p2
 P2 = p2s1 p1s2
@@ -42,6 +42,8 @@ configuracion_apnd.o: configuracion_apnd.c configuracion_ap.h list.h
 	$(CC) $(CFLAGS) -c $< -o $@
 relacion.o: relacion.c relacion.h
 	$(CC) $(CFLAGS) -c $< -o $@
+p1s3.o: p1s3.c relacion.c
+	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s1
 p1s1: p1s1.o stack.o
 	$(CC) $^ -Wall $(LIBS) -o $@
@@ -49,7 +51,7 @@ p1s1: p1s1.o stack.o
 p1s2: p1s2.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 # $ make p1s3
-p1s3: relacion.o
+p1s3: p1s3.o relacion.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 ########################################################################
 # P2
