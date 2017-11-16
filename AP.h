@@ -1,6 +1,14 @@
 #ifndef AP_H
 #define AP_H
 
+#include "estado.h"
+#include "palabra.h"
+#include "stack.h"
+#include "configuracion_apnd.h"
+#include "relacion.h"
+
+typedef struct _AP AP;
+
 AP * APNuevo( char * nombre, 
               int num_estados, 
               int num_simbolos_entrada, 
