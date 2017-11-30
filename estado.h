@@ -6,6 +6,8 @@
 #define INICIAL_Y_FINAL 2
 #define NORMAL 3
 
+#include "stdio.h"
+
 typedef struct _Estado Estado;
 
 Estado * estadoNuevo( char * nombre, int tipo);

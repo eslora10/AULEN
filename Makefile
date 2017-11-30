@@ -42,6 +42,8 @@ configuracion_apnd.o: configuracion_apnd.c configuracion_ap.h list.h
 	$(CC) $(CFLAGS) -c $< -o $@
 relacion.o: relacion.c relacion.h
 	$(CC) $(CFLAGS) -c $< -o $@
+AP.o: AP.c AP.h
+	$(CC) $(CFLAGS) -c $< -o $@
 p1s3.o: p1s3.c relacion.c
 	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s1
@@ -51,7 +53,7 @@ p1s1: p1s1.o stack.o
 p1s2: p1s2.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 # $ make p1s3
-p1s3: p1s3.o relacion.o
+p1s3: p1s3.o relacion.o AP.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
 	$(CC) $^ -Wall $(LIBS) -o $@
 ########################################################################
 # P2
