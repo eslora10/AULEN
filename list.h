@@ -30,7 +30,7 @@ void * list_extractLast(List* list);
 Bool list_isEmpty(const List* list);
 
 /* Devuelve el elemento i-ésimo almacenado en la lista. En caso de error, devuelve NULL. */
-const void* list_get(const List* list, int i);
+int list_get(const List* list, void* pElem);
 /* Devuelve el tamaño de una lista. */
 int list_size(const List* list);
 

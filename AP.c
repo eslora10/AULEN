@@ -21,7 +21,7 @@ struct _AP {
     char *nombre;
     List *alfabeto; /*Set*/
     int len_alfabeto;
-    List *alfabeto_pila;
+    List *alfabeto_pila; /*Set, se reserva un caracter para la lambda*/
     int len_alfabeto_pila;
     List *estados; /*Set*/
     int len_estados;
@@ -30,21 +30,22 @@ struct _AP {
     ConfiguracionApnd *q;
     TransicionAP * fn_tansicion;
     Stack *pila;
+    Estado *inicial;
 };
 
-
-void *copy_p_string(const void* s1){
+void *copy_p_string(const void* s1) {
     char *s2;
-    
-    s2 = (char*)malloc(sizeof(char)* strlen((char*)s1)+1);
-    
-    strcpy(s2, (char*)s1);
-    
+
+    s2 = (char*) malloc(sizeof (char)* strlen((char*) s1) + 1);
+
+    strcpy(s2, (char*) s1);
+
     return s2;
-    
+
 }
-int print_p_string(FILE *f, const void*s){
-    return fprintf(f, "%s ", (char*)s);
+
+int print_p_string(FILE *f, const void*s) {
+    return fprintf(f, "%s ", (char*) s);
 }
 
 TransicionAP *transicionAPNueva(char * nombre, int num_simbolos_pila,
@@ -69,11 +70,11 @@ TransicionAP *transicionAPNueva(char * nombre, int num_simbolos_pila,
             for (estado_fin = 0; estado_fin < num_estados; estado_fin++) {
                 t->acciones[pila][estado_ini][estado_fin] = (List **) malloc(num_simbolos_entrada * sizeof (List*));
                 for (entrada = 0; entrada < num_simbolos_entrada; entrada++)
-                    t->acciones[pila][estado_ini][estado_fin][entrada] = 
-                            list_ini((destroy_element_function_type)palabraElimina,
-                            (copy_element_function_type) palabraCopia,
-                            (print_element_function_type) palabraImprime,
-                            (cmp_element_function_type) palabraCompara);
+                    t->acciones[pila][estado_ini][estado_fin][entrada] =
+                        list_ini((destroy_element_function_type) palabraElimina,
+                        (copy_element_function_type) palabraCopia,
+                        (print_element_function_type) palabraImprime,
+                        (cmp_element_function_type) palabraCompara);
             }
         }
     }
@@ -105,15 +106,15 @@ TransicionAP *transicionAPinserta(TransicionAP *t, int pila, int estado_ini,
     if (pila >= t->num_simbolos_pila || estado_ini >= t->num_estados ||
             estado_fin >= t->num_estados || entrada >= t->num_simbolos_entrada)
         return NULL;
-    list_insertFirst(t->acciones[pila][estado_ini][estado_fin][entrada], (void*)palabra);
+    list_insertFirst(t->acciones[pila][estado_ini][estado_fin][entrada], (void*) palabra);
 
     return t;
 
 }
 
 List *transicionAPbusca(TransicionAP *t, int pila, int estado_ini,
-        int estado_fin, int entrada){
-    if(pila > t->num_simbolos_pila || estado_ini > t->num_estados || 
+        int estado_fin, int entrada) {
+    if (pila > t->num_simbolos_pila || estado_ini > t->num_estados ||
             estado_fin > t->num_estados || entrada > t->num_simbolos_entrada)
         return NULL;
     return t->acciones[pila][estado_ini][estado_fin][entrada];
@@ -130,64 +131,186 @@ AP * APNuevo(char * nombre,
     if (!ap) return NULL;
 
     ap->nombre = (char*) malloc((strlen(nombre) + 1) * sizeof (char));
-    if(!ap->nombre) return NULL;
+    if (!ap->nombre) return NULL;
     strcpy(ap->nombre, nombre);
-    
-    ap->alfabeto = list_ini((destroy_element_function_type)free, copy_p_string, 
-    print_p_string, (cmp_element_function_type)strcmp);
-    
-    ap->estados = list_ini((destroy_element_function_type)estadoElimina, 
-    (copy_element_function_type)estado_copy, (print_element_function_type)estadoImprime, 
-    (cmp_element_function_type)estadoCompara);
 
-    ap->alfabeto_pila = list_ini((destroy_element_function_type)free, copy_p_string, 
-    print_p_string, (cmp_element_function_type)strcmp);
-    
+    ap->alfabeto = list_ini((destroy_element_function_type) free, copy_p_string,
+            print_p_string, (cmp_element_function_type) strcmp);
+
+    ap->estados = list_ini((destroy_element_function_type) estadoElimina,
+            (copy_element_function_type) estado_copy, (print_element_function_type) estadoImprime,
+            (cmp_element_function_type) estadoCompara);
+
+    ap->alfabeto_pila = list_ini((destroy_element_function_type) free, copy_p_string,
+            print_p_string, (cmp_element_function_type) strcmp);
+
     ap->lambdas = relacionNueva(nombre, num_estados);
     ap->palabra = palabraNueva();
     ap->q = configuracionApndIni();
     ap->fn_tansicion = transicionAPNueva(nombre, num_simbolos_pila,
-        num_estados, num_simbolos_entrada);
-    
+            num_estados, num_simbolos_entrada);
+
     ap->len_alfabeto_pila = num_simbolos_pila;
     ap->len_alfabeto = num_simbolos_entrada;
     ap->len_estados = num_estados;
-    
-    ap->pila = stack_ini((destroy_element_function_type)free, copy_p_string, 
-    print_p_string, (cmp_element_function_type)strcmp);
-    
-    ap->fn_tansicion = transicionAPNueva(nombre, num_simbolos_pila, num_estados, 
-    num_simbolos_entrada);
-    
+
+    ap->pila = stack_ini((destroy_element_function_type) free, copy_p_string,
+            print_p_string, (cmp_element_function_type) strcmp);
+
+    ap->fn_tansicion = transicionAPNueva(nombre, num_simbolos_pila, num_estados,
+            num_simbolos_entrada);
+
     return ap;
 }
 
-void APElimina(AP * p_ap);
+void APElimina(AP * p_ap) {
+    if (p_ap->nombre)
+        free(p_ap-> nombre);
+    if (p_ap->alfabeto)
+        list_destroy(p_ap->alfabeto);
+    if (p_ap->estados)
+        list_destroy(p_ap->estados);
 
-void APImprime(FILE * fd, AP * p_ap);
+    /*TODO DISTROY TRANSICIONES*/
 
-AP * APInsertaSimboloAlfabetoEntrada(AP * p_ap, char * simbolo);
+    if (p_ap->lambdas)
+        relacionElimina(p_ap->lambdas);
+    if (p_ap->palabra)
+        palabraElimina(p_ap->palabra);
+    if (p_ap->q)
+        configuracionApndDestroy(p_ap->q);
 
-AP * APInsertaSimboloAlfabetoPila(AP * p_ap, char * simbolo);
+    free(p_ap);
 
-AP * APInsertaEstado(AP * p_ap, char * nombre, int tipo);
+}
 
-AP * APInsertaLTransicion(AP * p_ap,
-        char * nombre_estado_i,
-        char * nombre_estado_f);
+void APImprime(FILE * fd, AP* p_ap);
+
+AP * APInsertaSimboloAlfabetoEntrada(AP * p_ap, char * simbolo) {
+    /*no control de errores, asumimos el usuario sabe lo que hace*/
+
+    if (list_belongs(p_ap->alfabeto, (void *) simbolo))
+        return p_ap;
+
+    list_insertFirst(p_ap->alfabeto, (void *) simbolo);
+    p_ap->len_alfabeto++;
+
+    return p_ap;
+
+}
+
+AP * APInsertaSimboloAlfabetoPila(AP * p_ap, char * simbolo) {
+    /*no control de errores, asumimos el usuario sabe lo que hace*/
+
+    if (list_belongs(p_ap->alfabeto_pila, (void *) simbolo))
+        return p_ap;
+
+    list_insertFirst(p_ap->alfabeto_pila, simbolo);
+    p_ap->len_alfabeto_pila++;
+
+    return p_ap;
+
+}
+
+AP * APInsertaEstado(AP * p_ap, char * nombre, int tipo) {
+    Estado *e = NULL;
+
+
+    e = estadoNuevo(nombre, tipo);
+    if (!e)
+        return NULL;
+
+    if (tipo == INICIAL)
+        p_ap->inicial = e;
+
+    if (list_belongs(p_ap->estados, (void *) e)) {
+        estadoElimina(e);
+        return p_ap;
+    }
+    list_insertFirst(p_ap->estados, e);
+    p_ap->len_estados++;
+
+    return p_ap;
+}
+
+AP * APInsertaLTransicion(AP * p_ap, char * nombre_estado_i, char * nombre_estado_f) {
+
+    int i = -1, j = -1;
+    Estado *estadoi, *estadof;
+
+    estadoi = estadoNuevo(nombre_estado_i, 0);
+    estadof = estadoNuevo(nombre_estado_f, 0);
+
+    i = list_get(p_ap->estados, estadoi);
+    j = list_get(p_ap->estados, estadof);
+
+    if (i < 0 || j < 0) return p_ap;
+
+    relacionInserta(p_ap->lambdas, i, j);
+
+    estadoElimina(estadoi);
+    estadoElimina(estadof);
+
+    return p_ap;
+}
 
 AP * APInsertaTransicion(AP * p_ap,
         char * nombre_simbolo_pila,
         char * nombre_estado_i,
         char * nombre_estado_f,
         char * nombre_simbolo_entrada,
-        Palabra * accion);
+        Palabra * accion){
+    int pila, estado_i, estado_f, entrada;
+    Estado *e;
+    
+    pila = list_get(p_ap->alfabeto_pila, (void*)nombre_simbolo_pila);
+    entrada = list_get(p_ap->alfabeto, (void*)nombre_simbolo_entrada);
+    e = estadoNuevo(nombre_estado_i, 0);
+    estado_i = list_get(p_ap->estados, e);
+    estadoElimina(e);
+    e = estadoNuevo(nombre_estado_f, 0);
+    estado_f = list_get(p_ap->estados, e);
+    estadoElimina(e);
+    
+    transicionAPinserta(p_ap->fn_tansicion, pila, estado_i, estado_f, entrada, accion);
+    
+    return p_ap;
+}
 
-AP * APInsertaLetra(AP * p_ap, char * letra);
+AP * APInsertaLetra(AP * p_ap, char * letra) {
+    palabraInsertaLetra(p_ap->palabra, letra);
 
-AP * APCierraLTransicion(AP * p_ap);
+    return p_ap;
+}
 
-AP * APInicializaEstado(AP * p_ap);
+AP * APCierraLTransicion(AP * p_ap) {
+    relacionCierreTransitivo(p_ap->lambdas);
+
+    return p_ap;
+}
+
+AP * APInicializaEstado(AP * p_ap) {
+    ConfiguracionAp *cap = NULL;
+    int i, j;
+
+    stack_push(p_ap->pila, (void*) "Z");
+
+    cap = configuracionApNueva(p_ap->inicial, p_ap->pila, p_ap->palabra);
+    p_ap->q = configuracionApndInsert(p_ap->q, cap);
+
+
+    /*Obtener el indice del estado inicial*/
+    i = list_get(p_ap->estados, (void*) p_ap->inicial);
+
+    /*transitar desde q0 con lambdas*/
+    for (j = 0; j < p_ap->len_estados; j++)
+        if (relacionIJ(p_ap->lambdas, i, j)) {
+            cap = configuracionApNueva(p_ap->inicial, p_ap->pila, p_ap->palabra);
+            p_ap->q = configuracionApndInsert(p_ap->q, cap);
+        }
+    
+    return p_ap;
+}
 
 int APTransita(AP * p_ap);
 
