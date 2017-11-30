@@ -58,7 +58,7 @@ TransicionAP transicionAPNueva(char * nombre, int num_simbolos_pila,
     return t;
 }
 
-void *transicionAPNueva(TransicionAP *t) {
+void *transicionAPElimina(TransicionAP *t) {
     int pila, estado_ini, estado_fin, entrada;
     if (!t) return;
 
@@ -189,7 +189,18 @@ AP * APCierraLTransicion(AP * p_ap){
 }
 
 AP * APInicializaEstado(AP * p_ap){
-    /*TODO*/
+    ConfiguracionAp *cap=NULL;
+    int i, e;
+
+    for(i=0;i<p_ap->len_estados;i++){
+        e=estadoEs(p_ap->estados[i],"INICIAL");
+        if(e)
+            break;
+    }
+    /*TODO AÑADIR PILA*/
+    cap=configuracionApNueva(p_ap->estado[e], Stack * pila, p_ap->palabra);
+    /*TODO transitar desde q0 con lambdas*/
+    p_ap->q=configuracionApndInsert(p_ap->q, cap);
 }
 
 int APTransita(AP * p_ap);
