@@ -8,6 +8,9 @@
 typedef struct _ConfiguracionAp ConfiguracionAp;
 ConfiguracionAp * configuracionApNueva(Estado * estado, Stack * pila, Palabra *
         cadena);
+Estado *getEstado(ConfiguracionAp * p_cap);
+Stack *getPila(ConfiguracionAp * p_cap);
+Palabra *getCadena(ConfiguracionAp * p_cap);
 /* Se crea una configuración reservando memoria nueva para ella y para copiar
 todas las componentes que se proporcionan como argumento */
 void configuracionApElimina(ConfiguracionAp * p_cap);

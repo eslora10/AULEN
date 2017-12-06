@@ -63,6 +63,10 @@ Palabra * palabraInsertaLetra(Palabra * p_p, char * letra) {
     return p_p;
 }
 
+char ** palabraGetPalabra(Palabra * p_p){
+    return p_p->word;
+    
+}
 /* Inserta una letra (que es un string - char * - ) en la palabra proporcionada
 como argumento (modificándola, por tanto) y devuelve la palabra resultante. Para
 ello debe hacer una copia en memoria nueva para la nueva letra */

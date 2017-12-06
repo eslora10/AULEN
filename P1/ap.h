@@ -7,6 +7,7 @@
 #include "configuracion_apnd.h"
 #include "relacion.h"
 
+#define SIMBOLO_INICIO_PILA "Z"
 typedef struct _AP AP;
 
 AP * APNuevo( char * nombre, 
@@ -34,7 +35,7 @@ AP * APInsertaTransicion(	AP * p_ap,
 				char * nombre_estado_f, 
 				char * nombre_simbolo_entrada, 
 				Palabra * accion);
-
+AP * APInicializaCadena(AP *p_ap);
 AP * APInsertaLetra(AP * p_ap, char * letra);
 
 AP * APCierraLTransicion (AP * p_ap);

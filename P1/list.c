@@ -191,12 +191,9 @@ int list_print(FILE *fd, const List* list) {
     if (!list || list_isEmpty(list))
         return 0;
 
-    count += fprintf(fd, "Lista con %hu elementos: \n", list_size(list));
-
     aux = list->node;
     while (aux != NULL) {
         count += dynamicNode_print(fd, aux, list->print_element_function);
-        count += fprintf(fd, "\n");
         aux = dynamicNode_getNext(aux);
     }
 
@@ -247,16 +244,35 @@ int list_get(const List* list, void * pElem) {
 
     if (list_isEmpty(list)) return -1;
 
-            aux = list->node;
-        while ((aux != NULL)
-                &&
-                (list->cmp_element_function(dynamicNode_getData(aux), pElem) != 0)
-                ) {
-            i++;
-            aux = dynamicNode_getNext(aux);
-        }
-            
+    aux = list->node;
+    while ((aux != NULL)
+            &&
+            (list->cmp_element_function(dynamicNode_getData(aux), pElem) != 0)
+            ) {
+        i++;
+        aux = dynamicNode_getNext(aux);
+    }
+
     if (aux == NULL) /* SE HA ALCANZADO AL FINAL DE LA LISTA SIN ENCONTRAR EL ELEMENTO */
         return -1;
     else return i;
+}
+
+void *list_get_pos(List *list, int pos) {
+    int i = 0;
+    DynamicNode *aux;
+    if (!list) return NULL;
+
+    if (list_isEmpty(list)) return NULL;
+
+    aux = list->node;
+
+    for (i = 0; i < pos; i++) {
+        aux = dynamicNode_getNext(aux);
+        if (!aux) break;
     }
+
+    if (aux == NULL) /* SE HA ALCANZADO AL FINAL DE LA LISTA SIN ENCONTRAR EL ELEMENTO */
+        return NULL;
+    else return dynamicNode_getData(aux);
+}

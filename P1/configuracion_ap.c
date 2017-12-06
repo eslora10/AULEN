@@ -38,6 +38,18 @@ void configuracionApElimina(ConfiguracionAp * p_cap) {
     free(p_cap);
 }
 
+Estado *getEstado(ConfiguracionAp * p_cap) {
+    return p_cap->estado;
+}
+
+Stack *getPila(ConfiguracionAp * p_cap) {
+    return p_cap->pila;
+}
+
+Palabra *getCadena(ConfiguracionAp * p_cap) {
+    return p_cap->cadena;
+}
+
 void configuracionApImprime(FILE * fd, ConfiguracionAp * p_cap) {
 
     fprintf(fd, "(");

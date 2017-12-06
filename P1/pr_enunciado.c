@@ -5,7 +5,6 @@
 int main(int argc, char ** argv)
 {
 	AP * ap;
-	int i;
 	Palabra * accion;
 
 /* CREACIÓN DEL AUTÓMATA */
@@ -124,9 +123,11 @@ int main(int argc, char ** argv)
 
 	/* SE MUESTRA EL AUTOMATA */
 
+        fprintf(stdout,"\n\n********************************** AUTÓMATA A PILA *****************************************\n\n");
 	APImprime(stdout, ap);
 
 
+        fprintf(stdout,"\n\n********************************** PROCESA CADENA  *****************************************\n\n");
  	APProcesaEntrada(stdout,ap); 
 
 
@@ -146,6 +147,7 @@ int main(int argc, char ** argv)
 
 	APInicializaEstado(ap);
 
+        fprintf(stdout,"\n\n********************************** PROCESA CADENA  *****************************************\n\n");
  	APProcesaEntrada(stdout,ap); 
 
 
@@ -167,6 +169,7 @@ int main(int argc, char ** argv)
 
 	APInicializaEstado(ap);
 
+        fprintf(stdout,"\n\n********************************** PROCESA CADENA  *****************************************\n\n");
  	APProcesaEntrada(stdout,ap); 
 
 /* SE LIBERAN RECURSOS */
@@ -174,6 +177,6 @@ int main(int argc, char ** argv)
 
 
 	APElimina( ap);
+	return 0;
 
 }
-

@@ -8,24 +8,15 @@
 LIBS = -lm -pthread
 CC = gcc
 CFLAGS = -g -Wall -ansi -pedantic
+OBJ=relacion.o ap.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
+EJ= AP_enunciado AP_lambda AP_estrella
 
 # $ make
 # $ make all
-all: p1s2 p1s1 p1s3
-# $ make p1
-P1 = p1s1 p1s2 p1s3
-p1: $(P1)
-# $ make p2
-P2 = p2s1 p1s2
-p2: $(P2)
-
+all: AP_enunciado AP_lambda AP_estrella
 ########################################################################
 # P1
 #########################################################################
-p1s1.o: p1s1.c stack.h basic_types.h
-	$(CC) $(CFLAGS) -c $< -o $@
-p1s2.o: p1s2.c palabra.h estado.h
-	$(CC) $(CFLAGS) -c $< -o $@
 stack.o: stack.c stack.h basic_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
 estado.o: estado.c estado.h
@@ -42,32 +33,22 @@ configuracion_apnd.o: configuracion_apnd.c configuracion_ap.h list.h
 	$(CC) $(CFLAGS) -c $< -o $@
 relacion.o: relacion.c relacion.h
 	$(CC) $(CFLAGS) -c $< -o $@
-AP.o: AP.c AP.h
+ap.o: ap.c ap.h
 	$(CC) $(CFLAGS) -c $< -o $@
-p1s3.o: p1s3.c relacion.c
+pr_enunciado.o: pr_enunciado.c ap.h palabra.h
 	$(CC) $(CFLAGS) -c $< -o $@
-# $ make p1s1
-p1s1: p1s1.o stack.o
-	$(CC) $^ -Wall $(LIBS) -o $@
-# $ make p1s2
-p1s2: p1s2.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
-	$(CC) $^ -Wall $(LIBS) -o $@
+pr_enunciado_lambda.o: pr_enunciado_lambda.c ap.h palabra.h
+	$(CC) $(CFLAGS) -c $< -o $@
+pr_enunciado_lambda_0_estrella.o: pr_enunciado_lambda_0_estrella.c ap.h palabra.h
+	$(CC) $(CFLAGS) -c $< -o $@
 # $ make p1s3
-p1s3: p1s3.o relacion.o AP.o estado.o palabra.o configuracion_ap.o stack.o configuracion_apnd.o list.o dynamic_node.o
+AP_enunciado: pr_enunciado.o $(OBJ)
 	$(CC) $^ -Wall $(LIBS) -o $@
-########################################################################
-# P2
-########################################################################
-src3.o: src3.c header2.h
-	$(CC) $(CFLAGS) -c $< -o $@
-src4.o: src4.c header1.h header2.h
-	$(CC) $(CFLAGS) -c $< -o $@
-# $ make p2s1
-p2s1: src3.o src1.o
+AP_lambda: pr_enunciado_lambda.o $(OBJ)
 	$(CC) $^ -Wall $(LIBS) -o $@
-# $ make p2s2
-p2s2: src3.o src4.o src2.o
+AP_estrella: pr_enunciado_lambda_0_estrella.o $(OBJ)
 	$(CC) $^ -Wall $(LIBS) -o $@
+
 
 ########################################################################
 # Information and Clean
@@ -93,7 +74,7 @@ info:
 clean:
 	@echo "Borrando objetos, ejecutables, etc."
 	@rm -fr Doxyfile latex html
-	@rm -f *~ *.o core $(P1) $(P2)
+	@rm -f *~ *.o core $(EJ)
 
 ########################################################################
 # Using utilities

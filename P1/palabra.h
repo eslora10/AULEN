@@ -15,6 +15,7 @@ Palabra * palabraInsertaLetra(Palabra * p_p, char * letra);
 /* Inserta una letra (que es un string - char * - ) en la palabra proporcionada
 como argumento (modificándola, por tanto) y devuelve la palabra resultante. Para
 ello debe hacer una copia en memoria nueva para la nueva letra */
+char ** palabraGetPalabra(Palabra * p_p);
 
 int palabraTamano(Palabra * p_p);
 /* Devuelve la longitud de la palabra */

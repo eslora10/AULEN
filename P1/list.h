@@ -33,6 +33,7 @@ Bool list_isEmpty(const List* list);
 int list_get(const List* list, void* pElem);
 /* Devuelve el tamaño de una lista. */
 int list_size(const List* list);
+void *list_get_pos(List *list, int pos);
 
 /* Imprime una lista devolviendo el número de caracteres escritos. */
 int list_print(FILE *fd, const List* list);
