@@ -1,0 +1,9 @@
+
+
+AFND * AFNDTransforma(AFND * afnd){
+
+
+
+
+
+}
