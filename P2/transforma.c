@@ -1,6 +1,7 @@
-
+#include "transforma.h"
 
 AFND * AFNDTransforma(AFND * afnd){
+<<<<<<< HEAD
     AFND * afd;
     int i,num_simbolos;
     char* nombreIni;
@@ -19,4 +20,7 @@ AFND * AFNDTransforma(AFND * afnd){
 
 
 
+=======
+    return NULL;
+>>>>>>> 16e5de1b91cc169ce8789fb8cc4fbdd15ca7125c
 }
