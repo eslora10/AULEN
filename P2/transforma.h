@@ -3,6 +3,7 @@
 
 #include "afnd.h"
 #include <string.h>
+#include <stdlib.h>
 
 AFND * AFNDTransforma(AFND * afnd);
 
