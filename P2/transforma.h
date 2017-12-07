@@ -2,6 +2,7 @@
 #define TRANSFORMA_H
 
 #include "afnd.h"
+#include <string.h>
 
 AFND * AFNDTransforma(AFND * afnd);
 
