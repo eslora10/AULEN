@@ -1,8 +1,24 @@
 #include "transforma.h"
 
-AFND * AFNDTransforma(AFND * afnd){
+struct Estado {
+    char nombre[128];
+    int tipo;
+};
+
+struct Transicion {
+    char ini[128];
+    char fin[128];
+    char simbolo[16];
+};
+
+AFND * AFNDTransforma(AFND * afnd) {
     AFND * afd;
-    int i,j,k,l,num_simbolos_AFND, num_estados_AFND, esFin = 0,tipo;
+    int num_estados = 0, num_trans = 0;
+    struct Estado * new_estados = NULL;
+    struct Transicion *new_trans = NULL ;
+    struct Estado e;
+    struct Transicion tr;
+    int i, j, k, l, num_simbolos_AFND, num_estados_AFND, esFin = 0, tipo, seguir = 0;
     char* nombreIni, *nombre;
     char nombreF[128];
 
@@ -10,82 +26,152 @@ AFND * AFNDTransforma(AFND * afnd){
     /************/
     int * listaEstados;
     int * listaEstadosSig;
+    int * estudiados;
     /************/
 
-    num_simbolos_AFND=AFNDNumSimbolos(afnd);
-    num_estados_AFND=AFNDNumEstados(afnd);
+    num_simbolos_AFND = AFNDNumSimbolos(afnd);
+    num_estados_AFND = AFNDNumEstados(afnd);
 
-    listaEstados=(int*) calloc(num_estados_AFND,sizeof(int));
-    listaEstadosSig=(int*) calloc(num_estados_AFND,sizeof(int));
+    listaEstados = (int*) calloc(num_estados_AFND, sizeof (int));
+    listaEstadosSig = (int*) calloc(num_estados_AFND, sizeof (int));
+    estudiados = (int*) calloc(num_estados_AFND, sizeof (int));
 
-
-    afd= AFNDNuevo("finito",num_simbolos_AFND,num_estados_AFND);
+    /*afd= AFNDNuevo("finito",num_simbolos_AFND,num_estados_AFND);*/
 
     /*conseguir los simbolos paar el nuevo automata*/
-    for(i=0;i<num_simbolos_AFND;i++)
-        AFNDInsertaSimbolo(afd, AFNDSimboloEn(afnd, i));
+    /*for(i=0;i<num_simbolos_AFND;i++)
+        AFNDInsertaSimbolo(afd, AFNDSimboloEn(afnd, i));*/
 
     /*conseguir el estado inicial*/
-    i=AFNDIndiceEstadoInicial(afnd);
-    nombreIni=AFNDNombreEstadoEn(afnd, i);
-    listaEstados[i]=1;
-    strcpy(nombreF,nombreIni);
+    i = AFNDIndiceEstadoInicial(afnd);
+    estudiados[i] = 1;
+    nombreIni = AFNDNombreEstadoEn(afnd, i);
+    listaEstados[i] = 1;
+    strcpy(nombreF, nombreIni);
 
     /*conseguimos los estados a los que transita el afnd desde su estado ini con LAMBDAS*/
-    for(j=0;j<num_estados_AFND;j++)
-        if(AFNDCierreLTransicionIJ(afnd, i, j)){
+    for (j = 0; j < num_estados_AFND; j++)
+        if (AFNDCierreLTransicionIJ(afnd, i, j)) {
             /*asignamos transicion al estado en la pos j*/
-            listaEstados[j]=1;
+            listaEstados[j] = 1;
 
-            nombre=AFNDNombreEstadoEn(afnd,j);
-            tipo=AFNDTipoEstadoEn(afnd, j);
-            esFin = (tipo== FINAL ||tipo== INICIAL_Y_FINAL);
-            strcat(nombreF,nombre);
+            nombre = AFNDNombreEstadoEn(afnd, j);
+            tipo = AFNDTipoEstadoEn(afnd, j);
+            if (tipo == FINAL || tipo == INICIAL_Y_FINAL)
+                esFin = 1;
+            strcat(nombreF, nombre);
         }
-    if (esFin)
-        AFNDInsertaEstado(afd,nombreF,INICIAL_Y_FINAL);
-    else
-        AFNDInsertaEstado(afd,nombreF,INICIAL);
+    strcpy(e.nombre, nombreF);
+    if (esFin) {
+        e.tipo = INICIAL_Y_FINAL;
+        esFin = 0;
+    } else {
+        e.tipo = INICIAL;
+    }
+    num_estados++;
+    new_estados = (struct Estado*) realloc(new_estados, num_estados);
+    strcpy(new_estados[num_estados - 1].nombre, e.nombre);
+    new_estados[num_estados - 1].tipo = e.tipo;
 
+    strcpy(tr.ini, nombreF);
 
-    /*iter Simbolo indice i*/
-    for(i=0;i<num_simbolos_AFND;i++)
-        /*iter estados (los que tengo dentro del nuevo estado)==listaEstados indice j*/
-        for(j=0;j<num_estados_AFND;j++)
-            if(listaEstados[j]==1){
-                listaEstados[j]=0;
-                strcpy(nombreF,"");
-                /*iteramos en el resto de estados, veamos a donde podemos ir*/
-                for(k=0;k<num_estados_AFND;k++)
-                    if(AFNDTransicionIndicesEstadoiSimboloEstadof(afnd, j, i, k)){
-                    /*CASO: podemos ir al estado k*/
-                        nombre=AFNDNombreEstadoEn(afnd, k);
-                        strcat(nombreF,nombre);
-                        /********es necesario poner aqui esFin=0?????********/
+    while (seguir) {
+        seguir = 0;
+        /*iteramos en la lista de simbolo de entrada (indice i)*/
+        for (i = 0; i < num_simbolos_AFND; i++) {
+            /*iteramos en la lista de estados, j es el estado actual*/
+            for (j = 0; j < num_estados_AFND; j++) {
+                if (listaEstados[j] == 1) {
+                    /*TODO Mirar si marcar como estudiado es aqui*/
+                    estudiados[j] = 1; /*Marcamos el estado j como estudiado*/
+                    strcpy(nombreF, "");
+                    /*iteramos en el resto de estados, veamos a donde podemos ir*/
+                    for (k = 0; k < num_estados_AFND; k++) {
+                        if (AFNDTransicionIndicesEstadoiSimboloEstadof(afnd, j, i, k)) {
+                            /*CASO: podemos ir al estado k*/
+                            nombre = AFNDNombreEstadoEn(afnd, k);
+                            strcat(nombreF, nombre);
 
-                        /*TODO anyadir estado k a la lista listaEstadosSig  ESTHER KNOWS WHY*/
+                            /*Anyadir estado k a la lista listaEstadosSig  ESTHER KNOWS WHY*/
+                            listaEstadosSig[k] = 1;
+                            tipo = AFNDTipoEstadoEn(afnd, k);
+                            if (tipo == FINAL || tipo == INICIAL_Y_FINAL)
+                                esFin = 1;
 
-                        
-                        /*iteramos los estados Siguientes para ver si podemos transitar CON LAMBDAS*/
-                        for(l=0;l<num_estados_AFND;l++)
-                            if(AFNDCierreLTransicionIJ(afnd, k,l)){
-                                /*asignamos transicion al estado en la pos l*/
-                                listaEstadosSig[l]=1;
+                            /*iteramos los estados Siguientes para ver si podemos transitar CON LAMBDAS*/
+                            for (l = 0; l < num_estados_AFND; l++) {
+                                if (AFNDCierreLTransicionIJ(afnd, k, l)) {
+                                    /*asignamos transicion al estado en la pos l*/
+                                    listaEstadosSig[l] = 1;
 
-                                nombre=AFNDNombreEstadoEn(afnd,l);
-                                tipo=AFNDTipoEstadoEn(afnd, l);
-                                esFin = (tipo== FINAL ||tipo== INICIAL_Y_FINAL);
-                                strcat(nombreF,nombre);
+                                    nombre = AFNDNombreEstadoEn(afnd, l);
+                                    tipo = AFNDTipoEstadoEn(afnd, l);
+                                    if (tipo == FINAL || tipo == INICIAL_Y_FINAL)
+                                        esFin = 1;
+                                    strcat(nombreF, nombre);
+                                }
                             }
-                        if (esFin)
-                            AFNDInsertaEstado(afd,nombreF,FINAL);
-                        else
-                            AFNDInsertaEstado(afd,nombreF,NORMAL);
 
-                    /*TODO conseguimos la transicion en el nuevo automata*/
+                        }
+                    }
+                    /*Creamos el nuevo estado*/
+                    strcpy(e.nombre, nombreF);
+                    if (esFin) {
+                        e.tipo = FINAL;
+                        esFin = 0;
+
+                    } else
+                        e.tipo = NORMAL;
+
+                    num_estados++;
+                    new_estados = (struct Estado*) realloc(new_estados, num_estados);
+                    strcpy(new_estados[num_estados - 1].nombre, e.nombre);
+                    new_estados[num_estados - 1].tipo = e.tipo;
+
+                    /*Creamos una transicion*/
+                    strcpy(tr.fin, nombreF);
+                    strcpy(tr.simbolo, AFNDSimboloEn(afnd, i));
+                    num_trans++;
+                    new_trans = realloc(new_trans, num_trans);
+                    strcpy(new_trans[num_trans - 1].ini, tr.ini);
+                    strcpy(new_trans[num_trans - 1].fin, tr.fin);
+                    strcpy(new_trans[num_trans - 1].simbolo, tr.simbolo);
+
+                    /*Inicializamos el estado inicial de la proxima transicion
+                     al estado en el que estamos ahora*/
+                    strcpy(tr.ini, nombreF);
+
+                    /*Cambiamos la lista de estados actual por la de estados siguientes
+                     ponemos los estados siguientes a 0*/
+                    for (l = 0; l < num_estados_AFND; l++) {
+                        listaEstados[l] = listaEstadosSig[l];
+                        listaEstadosSig[l] = 0;
                     }
                 }
+            }
+        }
+        for (l = 0; l < num_estados_AFND; l++) {
+            if (!estudiados[l]) {
+                seguir = 1;
+                break;
+            }
+        }
 
+
+    }
+    /*Creamos el automata final*/
+    afd= AFNDNuevo("finito",num_simbolos_AFND,num_estados);
+    
+    for(i=0;i<num_simbolos_AFND;i++)
+        AFNDInsertaSimbolo(afd, AFNDSimboloEn(afnd, i));
+    
+    for(i = 0; i<num_estados; i++)
+        AFNDInsertaEstado(afd, new_estados[i].nombre, new_estados[i].tipo);
+    for(i=0; i<num_trans; i++){
+        AFNDInsertaTransicion(afd, new_trans[i].ini, new_trans[i].simbolo, 
+                new_trans[i].fin);
+    }
+    
 
     return afd;
 }
