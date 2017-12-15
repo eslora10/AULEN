@@ -1,0 +1,5 @@
+digraph finito  { rankdir=LR;
+	_invisible [style="invis"];
+	q0q1;
+	_invisible -> q0q1 ;
+}
